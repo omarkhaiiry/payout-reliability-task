@@ -1,0 +1,27 @@
+# Maven
+target/
+*.log
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+
+# Logs
+logs/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
