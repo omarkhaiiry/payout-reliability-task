@@ -35,4 +35,9 @@ sequenceDiagram
 *   **Unit Tests**: Mock processing logic.
 *   **Integration Tests**:
     *   `PayoutIntegrationTest`: Verify happy path & 200 OK on retry.
-    *   `RaceConditionTests` (Nested): Simulate `DataIntegrityViolationException` recovery using Mockito.
+    *   `RaceConditionIT`: Simulate `DataIntegrityViolationException` recovery using Mockito.
+
+## Quick Start:
+- Run the Application
+- H2 DB is already configured to make testing easier.
+- Import postman_collection.json to test the Idempotency logic instantly.

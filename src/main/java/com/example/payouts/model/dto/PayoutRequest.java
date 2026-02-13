@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PayoutRequest {
-    private BigDecimal amount;
-    private String currency;
-    private String recipientAccount;
+  private BigDecimal amount;
+  private String currency;
+  private String recipientAccount;
 }

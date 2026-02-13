@@ -26,106 +26,44 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class PayoutIT {
 
-  @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @Autowired private ObjectMapper objectMapper;
-
-  @Test
-  @DisplayName("Should create payout (201) and return existing on retry (200)")
-  void shouldCreatePayoutAndHandleIdempotency() throws Exception {
-    String idempotencyKey = UUID.randomUUID().toString();
-    PayoutRequest request =
-        PayoutRequest.builder()
-            .amount(new BigDecimal("50.00"))
-            .currency("USD")
-            .recipientAccount("acct_test_integration")
-            .build();
-
-    String requestJson = objectMapper.writeValueAsString(request);
-
-    mockMvc
-        .perform(
-            post("/api/v1/payouts")
-                .header("x-client-id", "default-client")
-                .header("x-idempotency-key", idempotencyKey)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.created").value(true))
-        .andExpect(jsonPath("$.payout.status").value("PENDING"));
-
-    mockMvc
-        .perform(
-            post("/api/v1/payouts")
-                .header("x-client-id", "default-client")
-                .header("x-idempotency-key", idempotencyKey)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestJson))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.created").value(false))
-        .andExpect(jsonPath("$.payout.status").value("PENDING"));
-  }
-
-  @Nested
-  @DisplayName("Race Condition Tests")
-  class RaceConditionIT {
-
-    @Autowired private MockMvc mockMvc;
-
-    @Autowired private ObjectMapper objectMapper;
-
-    @MockBean private PayoutRepository payoutRepository;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("Should recover from DataIntegrityViolationException by returning existing payout")
-    void shouldRecoverFromRaceCondition() throws Exception {
-      String idempotencyKey = "race-condition-key";
-      String clientId = "race-client";
+    @DisplayName("Should create payout (201) and return existing on retry (200)")
+    void shouldCreatePayoutAndHandleIdempotency() throws Exception {
+        String idempotencyKey = UUID.randomUUID().toString();
+        PayoutRequest request = PayoutRequest.builder()
+                .amount(new BigDecimal("50.00"))
+                .currency("USD")
+                .recipientAccount("acct_test_integration")
+                .build();
 
-      com.example.payouts.model.dto.PayoutRequest request =
-          com.example.payouts.model.dto.PayoutRequest.builder()
-              .amount(new java.math.BigDecimal("100.00"))
-              .currency("USD")
-              .recipientAccount("acct_existing")
-              .build();
+        String requestJson = objectMapper.writeValueAsString(request);
 
-      com.example.payouts.model.Payout existingPayout =
-          com.example.payouts.model.Payout.builder()
-              .id(1L)
-              .clientId(clientId)
-              .idempotencyKey(idempotencyKey)
-              .amount(new java.math.BigDecimal("100.00"))
-              .currency("USD")
-              .recipientAccount("acct_existing")
-              .status(com.example.payouts.model.enums.PayoutStatus.PENDING)
-              .build();
+        mockMvc
+                .perform(
+                        post("/api/v1/payouts")
+                                .header("x-client-id", "default-client")
+                                .header("x-idempotency-key", idempotencyKey)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestJson))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.created").value(true))
+                .andExpect(jsonPath("$.payout.status").value("PENDING"));
 
-      Mockito.when(
-              payoutRepository.findByClientIdAndIdempotencyKey(
-                  ArgumentMatchers.eq(clientId), ArgumentMatchers.eq(idempotencyKey)))
-          .thenReturn(java.util.Optional.empty()) // First call
-          .thenReturn(java.util.Optional.of(existingPayout)); // Second call (recovery)
-
-      Mockito.when(
-              payoutRepository.save(ArgumentMatchers.any(com.example.payouts.model.Payout.class)))
-          .thenThrow(
-              new org.springframework.dao.DataIntegrityViolationException(
-                  "Duplicate key violation"));
-
-      mockMvc
-          .perform(
-              post("/api/v1/payouts")
-                  .header("x-client-id", clientId)
-                  .header("x-idempotency-key", idempotencyKey)
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .content(objectMapper.writeValueAsString(request)))
-          .andExpect(status().isOk()) // Should be 200 OK (recovered)
-          .andExpect(jsonPath("$.created").value(false))
-          .andExpect(jsonPath("$.payout.id").value(1))
-          .andExpect(jsonPath("$.payout.status").value("PENDING"));
-
-      Mockito.verify(payoutRepository)
-          .save(ArgumentMatchers.any(com.example.payouts.model.Payout.class));
+        mockMvc
+                .perform(
+                        post("/api/v1/payouts")
+                                .header("x-client-id", "default-client")
+                                .header("x-idempotency-key", idempotencyKey)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.created").value(false))
+                .andExpect(jsonPath("$.payout.status").value("PENDING"));
     }
-  }
 }

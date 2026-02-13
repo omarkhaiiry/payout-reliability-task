@@ -1,2 +1,3 @@
-/Users/omar.diab1/IdeaProjects/payouts-reliability-task/src/test/java/com/example/payouts/PayoutIntegrationTest.java
-/Users/omar.diab1/IdeaProjects/payouts-reliability-task/src/test/java/com/example/payouts/PayoutServiceTest.java
+/Users/omar.diab1/IdeaProjects/payouts-reliability-task/src/test/java/com/example/payouts/PayoutIT.java
+/Users/omar.diab1/IdeaProjects/payouts-reliability-task/src/test/java/com/example/payouts/RaceConditionIT.java
+/Users/omar.diab1/IdeaProjects/payouts-reliability-task/src/test/java/com/example/payouts/service/PayoutServiceTest.java

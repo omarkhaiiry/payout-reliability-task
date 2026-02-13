@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface PayoutRepository extends JpaRepository<Payout, Long> {
-    Optional<Payout> findByClientIdAndIdempotencyKey(String clientId, String idempotencyKey);
+  Optional<Payout> findByClientIdAndIdempotencyKey(String clientId, String idempotencyKey);
 }

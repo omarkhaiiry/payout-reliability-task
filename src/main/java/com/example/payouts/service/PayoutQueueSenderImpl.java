@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class PayoutQueueSenderImpl implements PayoutQueueSender {
 
-    @Override
-    public void send(Payout payout) {
-        log.info("Sending payout to queue: {}", payout);
-    }
+  @Override
+  public void send(Payout payout) {
+    log.info("Sending payout to queue: {}", payout);
+  }
 }

@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PayoutController {
 
-    private final PayoutService payoutService;
+  private final PayoutService payoutService;
 
-    @PostMapping
-    public ResponseEntity<PayoutCreationResult> createPayout(
-            @RequestHeader("x-client-id") String clientId,
-            @RequestHeader("x-idempotency-key") String idempotencyKey,
-            @RequestBody PayoutRequest request) {
+  @PostMapping
+  public ResponseEntity<PayoutCreationResult> createPayout(
+      @RequestHeader("x-client-id") String clientId,
+      @RequestHeader("x-idempotency-key") String idempotencyKey,
+      @RequestBody PayoutRequest request) {
 
-        PayoutCreationResult result = payoutService.createPayout(request, idempotencyKey, clientId);
+    PayoutCreationResult result = payoutService.createPayout(request, idempotencyKey, clientId);
 
-        if (result.created()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(result);
-        } else {
-            return ResponseEntity.ok(result);
-        }
+    if (result.created()) {
+      return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    } else {
+      return ResponseEntity.ok(result);
     }
+  }
 }

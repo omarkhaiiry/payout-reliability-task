@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "payouts-reliability-task",
+    "name": "Payouts Reliability Task",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Payout (Happy Path)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-client-id",
+            "value": "client-123",
+            "type": "text"
+          },
+          {
+            "key": "x-idempotency-key",
+            "value": "{{$guid}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": 100.50,\n    \"currency\": \"USD\",\n    \"recipientAccount\": \"acct_happy_path\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8880/api/v1/payouts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8880",
+          "path": [
+            "api",
+            "v1",
+            "payouts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Payout (Duplicate Retry)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-client-id",
+            "value": "client-123",
+            "type": "text"
+          },
+          {
+            "key": "x-idempotency-key",
+            "value": "fixed-idempotency-key-001",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": 50.00,\n    \"currency\": \"EUR\",\n    \"recipientAccount\": \"acct_retry_test\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8880/api/v1/payouts",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8880",
+          "path": [
+            "api",
+            "v1",
+            "payouts"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

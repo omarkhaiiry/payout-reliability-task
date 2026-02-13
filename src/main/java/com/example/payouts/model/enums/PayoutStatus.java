@@ -1,7 +1,7 @@
 package com.example.payouts.model.enums;
 
 public enum PayoutStatus {
-    PENDING,
-    PROCESSED,
-    FAILED
+  PENDING,
+  PROCESSED,
+  FAILED
 }
