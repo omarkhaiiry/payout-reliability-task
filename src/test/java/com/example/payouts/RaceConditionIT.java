@@ -15,7 +15,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,8 +41,8 @@ class RaceConditionIT {
     String idempotencyKey = "race-condition-key";
     String clientId = "race-client";
 
-    com.example.payouts.model.dto.PayoutRequest request =
-        com.example.payouts.model.dto.PayoutRequest.builder()
+    PayoutRequest request =
+        PayoutRequest.builder()
             .amount(new java.math.BigDecimal("100.00"))
             .currency("USD")
             .recipientAccount("acct_existing")
