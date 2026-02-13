@@ -25,7 +25,6 @@ resource "aws_cloudwatch_metric_alarm" "payouts_queue_age_alarm" {
   period              = "60"
   statistic           = "Maximum"
   threshold           = 300
-  
   alarm_description   = "Alerts when payout messages are stuck in the queue for more than 5 minutes."
   alarm_actions       = [] 
   

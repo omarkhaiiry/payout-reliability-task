@@ -1,6 +1,8 @@
 package com.example.payouts;
 
+import com.example.payouts.model.Payout;
 import com.example.payouts.model.dto.PayoutRequest;
+import com.example.payouts.model.enums.PayoutStatus;
 import com.example.payouts.repository.PayoutRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -48,15 +50,15 @@ class RaceConditionIT {
             .recipientAccount("acct_existing")
             .build();
 
-    com.example.payouts.model.Payout existingPayout =
-        com.example.payouts.model.Payout.builder()
+    Payout existingPayout =
+        Payout.builder()
             .id(1L)
             .clientId(clientId)
             .idempotencyKey(idempotencyKey)
             .amount(new java.math.BigDecimal("100.00"))
             .currency("USD")
             .recipientAccount("acct_existing")
-            .status(com.example.payouts.model.enums.PayoutStatus.PENDING)
+            .status(PayoutStatus.PENDING)
             .build();
 
     Mockito.when(
@@ -66,7 +68,7 @@ class RaceConditionIT {
         .thenReturn(Optional.of(existingPayout));
 
     Mockito.when(
-            payoutRepository.save(ArgumentMatchers.any(com.example.payouts.model.Payout.class)))
+            payoutRepository.save(ArgumentMatchers.any(Payout.class)))
         .thenThrow(new DataIntegrityViolationException("Duplicate key violation"));
 
     mockMvc
@@ -82,6 +84,6 @@ class RaceConditionIT {
         .andExpect(jsonPath("$.payout.status").value("PENDING"));
 
     Mockito.verify(payoutRepository)
-        .save(ArgumentMatchers.any(com.example.payouts.model.Payout.class));
+        .save(ArgumentMatchers.any(Payout.class));
   }
 }
